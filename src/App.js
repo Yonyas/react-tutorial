@@ -134,6 +134,64 @@ class ReadContents extends Component {
   }
 }
 
+class UpdateContents extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: this.props.data.id,
+      title: this.props.data.title,
+      desc: this.props.data.desc,
+    };
+    this.inputFormHandler = this.inputFormHandler.bind(this);
+  }
+  inputFormHandler(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  }
+  render() {
+    console.log("UpdateContent render");
+    console.log(this.props.data);
+    return (
+      <div>
+        <h2>Update</h2>
+        <form
+          onSubmit={function (e) {
+            e.preventDefault();
+            this.props.onSubmit(
+              this.state.id,
+              this.state.title,
+              this.state.desc
+            );
+          }.bind(this)}
+        >
+          <input type="hidden" name="id" value={this.state.id} />
+          <p>
+            <input
+              type="text"
+              name="title"
+              placeholder="title"
+              value={this.state.title}
+              onChange={this.inputFormHandler}
+            ></input>
+          </p>
+          <p>
+            <textarea
+              name="desc"
+              placeholder="description"
+              value={this.state.desc}
+              onChange={this.inputFormHandler}
+            ></textarea>
+          </p>
+          <p>
+            <input type="submit" />
+          </p>
+        </form>
+      </div>
+    );
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -151,7 +209,19 @@ class App extends Component {
       ],
     };
   }
-  render() {
+  //contents 배열 중 내가 클릭한 id와 같은 부분을 리턴
+  getReadContent() {
+    var i = 0;
+    while (i < this.state.contents.length) {
+      var data = this.state.contents[i];
+      if (data.id === this.state.selected_id) {
+        return data;
+        break;
+      }
+      i = i + 1;
+    }
+  }
+  getContent() {
     var _title,
       _desc,
       _article = null;
@@ -160,19 +230,13 @@ class App extends Component {
       _desc = this.state.welcome.desc;
       _article = <ReadContents title={_title} desc={_desc} />;
     } else if (this.state.mode === "read") {
-      _title = this.state.contents[this.state.selected_id - 1].title;
-      _desc = this.state.contents[this.state.selected_id - 1].desc;
-      _article = <ReadContents title={_title} desc={_desc} />;
+      var _content = this.getReadContent();
+      _article = <ReadContents title={_content.title} desc={_content.desc} />;
     } else if (this.state.mode === "create") {
       _article = (
         <CreateContents
           onSubmit={function (_title, _desc) {
             this.max_content_id++;
-            // this.state.contents.push({
-            //   id: this.max_content_id,
-            //   title: _title,
-            //   desc: _desc,
-            // });
             var _contents = this.state.contents.concat({
               id: this.max_content_id,
               title: _title,
@@ -180,12 +244,38 @@ class App extends Component {
             });
             this.setState({
               contents: _contents,
+              selected_id: this.max_content_id,
+              mode: "read",
+            });
+          }.bind(this)}
+        />
+      );
+    } else if (this.state.mode === "update") {
+      _content = this.getReadContent();
+      _article = (
+        <UpdateContents
+          data={_content}
+          onSubmit={function (_id, _title, _desc) {
+            var _contents = Array.from(this.state.contents);
+            var i = 0;
+            while (i < _contents.length) {
+              if (_contents[i].id === _id) {
+                _contents[i] = { id: _id, title: _title, desc: _desc };
+                break;
+              }
+              i++;
+            }
+            this.setState({
+              contents: _contents,
+              mode: "read",
             });
           }.bind(this)}
         />
       );
     }
-
+    return _article;
+  }
+  render() {
     return (
       <div>
         <Title
@@ -200,7 +290,7 @@ class App extends Component {
           onChangePage={function (id) {
             this.setState({
               mode: "read",
-              selected_id: id,
+              selected_id: Number(id),
             });
           }.bind(this)}
         />
@@ -211,7 +301,7 @@ class App extends Component {
             });
           }.bind(this)}
         />
-        {_article}
+        {this.getContent()}
       </div>
     );
   }
