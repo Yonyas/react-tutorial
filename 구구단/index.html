@@ -20,13 +20,19 @@
 
         onSubmit = (e) => {
           e.preventDefault();
-          if (this.state.value == this.state.first * this.state.second) {
-            this.setState({
-              result: `${this.state.first} X ${this.state.second} 의 값은 ${this.state.value} 입니다`,
-              value: "",
-              first: Math.ceil(Math.random() * 9),
-              second: Math.ceil(Math.random() * 9),
+          if (
+            Number(this.state.value) ==
+            this.state.first * this.state.second
+          ) {
+            this.setState((prevState) => {
+              return {
+                result: `${this.state.first} X ${this.state.second} 의 값은 ${prevState.value} 입니다`,
+                value: "",
+                first: Math.ceil(Math.random() * 9),
+                second: Math.ceil(Math.random() * 9),
+              };
             });
+            this.input1.focus();
           } else {
             this.setState({
               result: "땡",
@@ -40,14 +46,21 @@
           });
         };
 
+        input1;
+        onRefInput = (c) => {
+          this.input1 = c;
+        };
+
         render() {
+          console.log("렌더링");
           return (
-            <div>
+            <React.Fragment>
               <div>
                 {this.state.first} 곱하기 {this.state.second} 는 ?
               </div>
               <form onSubmit={this.onSubmit}>
                 <input
+                  ref={this.onRefInput}
                   type="number"
                   name="answer"
                   value={this.state.value}
@@ -56,7 +69,7 @@
                 <button>입력!</button>
               </form>
               <div>{this.state.result}</div>
-            </div>
+            </React.Fragment>
           );
         }
       }
