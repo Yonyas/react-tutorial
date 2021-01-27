@@ -35,7 +35,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, "dist"),
     filename: "app.js",
-    publicPath: "/dist/",
+    publicPath: "/dist/", // 가상의 경로 express.static 과 비슷.. node..
   },
   devServer: {
     publicPath: "/dist/",

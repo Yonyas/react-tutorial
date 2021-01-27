@@ -1,58 +1,49 @@
 const React = require("react");
 const { Component } = React;
+const { useState, useRef } = React;
 
-class WordRelay extends Component {
-  state = {
-    word: "그댄내삶의이유",
-    value: "",
-    result: "",
-  };
-  onChangeInput = (e) => {
+const WordRelay = () => {
+  const [word, setWord] = useState("제로초");
+  const [value, setValue] = useState("");
+  const [result, setResult] = useState("");
+
+  const inputRef = useRef(null);
+
+  const onChangeInput = (e) => {
     this.setState({
       value: e.target.value,
     });
   };
 
-  onSubmitForm = (e) => {
+  const onSubmitForm = (e) => {
     e.preventDefault();
-    if (this.state.value[0] === this.state.word[this.state.word - 1]) {
-      console.log("hi");
-      this.setState({
-        word: this.state.value,
-        value: "",
-        result: "딩동댕",
-      });
-      this.input.focus();
+    if (value[0] === word[word.length - 1]) {
+      setResult("딩동댕");
+      setWord(value);
+      setValue("");
+      inputRef.current.focus();
     } else {
-      this.setState({
-        result: "땡",
-        value: "",
-      });
+      setResult("떙");
+      setValue("");
+      inputRef.current.focus();
     }
   };
 
-  input;
-  onRefInput = (c) => {
-    this.input = c;
-  };
-
-  render() {
-    return (
-      <>
-        <div>{this.state.word}</div>
-        <form onSubmit={this.onSubmitForm}>
-          <input
-            type="text"
-            ref={this.onRefInput}
-            value={this.state.value}
-            onChange={this.onChangeInput}
-          />
-          <button type="submit">입력</button>
-        </form>
-        <div>{this.state.result}</div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div>{word}</div>
+      <form onSubmit={onSubmitForm}>
+        <input
+          type="text"
+          ref={inputRef}
+          value={value}
+          onChange={onChangeInput}
+        />
+        <button type="submit">입력</button>
+      </form>
+      <div>{result}</div>
+    </>
+  );
+};
 
 module.exports = WordRelay;
