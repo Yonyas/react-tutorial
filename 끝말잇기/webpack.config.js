@@ -1,4 +1,5 @@
 const path = require("path");
+const RefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 //node에서 경로 쉽게 조작하도록 path가 있음. 그런게 있음..
 
 module.exports = {
@@ -22,14 +23,22 @@ module.exports = {
         loader: "babel-loader",
         options: {
           presets: ["@babel/preset-env", "@babel/preset-react"],
-          plugins: ["@babel/plugin-proposal-class-properties"],
+          plugins: [
+            "@babel/plugin-proposal-class-properties",
+            "react-refresh/babel",
+          ],
         },
       },
     ],
   },
-
+  plugins: [new RefreshWebpackPlugin()],
   output: {
     path: path.join(__dirname, "dist"),
     filename: "app.js",
-  }, // 출력, path.join은 현재폴더경로(__dirname) 안의 dist 를 보고 알아서 합쳐줌
+    publicPath: "/dist/",
+  },
+  devServer: {
+    publicPath: "/dist/",
+    hot: true,
+  },
 };
