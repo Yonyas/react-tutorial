@@ -21,7 +21,7 @@
         onSubmit = (e) => {
           e.preventDefault();
           if (
-            Number(this.state.value) ==
+            Number(this.state.value) ===
             this.state.first * this.state.second
           ) {
             this.setState((prevState) => {
