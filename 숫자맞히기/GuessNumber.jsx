@@ -26,6 +26,7 @@ class GuessNumber extends React.Component {
   onSubmitForm = (e) => {
     const { answer, value, tries } = this.state;
     e.preventDefault();
+    //맞췄으면
     if (value === answer.join("")) {
       this.setState({
         result: "홈런!",
@@ -43,7 +44,7 @@ class GuessNumber extends React.Component {
       let strike = 0;
       let ball = 0;
 
-      const answerArray = value.split("").map((v) => parseInt(v));
+      const myAnswerArray = value.split("").map((v) => parseInt(v));
       //10번 이상 틀렸을 때
       if (tries.length >= 9) {
         this.setState({
@@ -58,9 +59,9 @@ class GuessNumber extends React.Component {
         });
       } else {
         for (let i = 0; i < 4; i++) {
-          if (answerArray[i] === answer[i]) {
+          if (myAnswerArray[i] === answer[i]) {
             strike++;
-          } else if (answer.includes(answerArray[i])) {
+          } else if (answer.includes(myAnswerArray[i])) {
             ball++;
           }
         }

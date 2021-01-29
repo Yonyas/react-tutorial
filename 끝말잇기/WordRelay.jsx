@@ -1,12 +1,10 @@
 const React = require("react");
-const { Component } = React;
 const { useState, useRef } = React;
 
 const WordRelay = () => {
   const [word, setWord] = useState("제로초");
   const [value, setValue] = useState("");
   const [result, setResult] = useState("");
-
   const inputRef = useRef(null);
 
   const onChangeInput = (e) => {
