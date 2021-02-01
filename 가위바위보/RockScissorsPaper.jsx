@@ -24,28 +24,35 @@ class RockScissorsPaper extends Component {
 
   componentDidMount() {
     // 첫 렌더링된 후,, 여기에 비동기 요청을 많이 함.
-    this.interval = setInterval(() => {
-      if (this.state.imgCoord === rspCoord.가위) {
-        this.setState({
-          imgCoord: rspCoord.바위,
-        });
-      } else if (this.state.imgCoord === rspCoord.바위) {
-        this.setState({
-          imgCoord: rspCoord.보,
-        });
-      } else if (this.state.imgCoord === rspCoord.보) {
-        this.setState({
-          imgCoord: rspCoord.가위,
-        });
-      }
-    }, 2000);
+    this.interval = setInterval(this.changeHand, 2000);
   }
   componentDidUpdate() {
     // 리렌더링 후
   }
   componentWillUnmount() {
     // 컴포넌트 제거 직전,, 비동기 요청 정리를 많이 함.
+    clearInterval(this.inverval);
   }
+
+  changeHand = () => {
+    if (this.state.imgCoord === rspCoord.가위) {
+      this.setState({
+        imgCoord: rspCoord.바위,
+      });
+    } else if (this.state.imgCoord === rspCoord.바위) {
+      this.setState({
+        imgCoord: rspCoord.보,
+      });
+    } else if (this.state.imgCoord === rspCoord.보) {
+      this.setState({
+        imgCoord: rspCoord.가위,
+      });
+    }
+  };
+
+  comChoice = (imgCoord) => {
+    return Object.entries(rspCoord).find((v) => v[1] === imgCoord)[0];
+  };
 
   onClickBtn = (choice) => {
     const { imgCoord } = this.state;
@@ -53,15 +60,14 @@ class RockScissorsPaper extends Component {
     console.log(imgCoord, choice);
     console.log(Object.entries(rspCoord));
     const myScore = rspScore[choice];
-    const temp = Object.entries(rspCoord).find((v) => v[1] === imgCoord);
-    const comScore = rspScore[temp[0]];
+    const comScore = rspScore[this.comChoice(imgCoord)];
     const diff = myScore - comScore;
 
     if (diff === 0) {
       this.setState({
         result: "비김",
       });
-    } else if (diff === 1) {
+    } else if ([1, -2].includes(diff)) {
       this.setState((prevState) => {
         return {
           result: "짐 ㅠㅠ",
@@ -76,6 +82,7 @@ class RockScissorsPaper extends Component {
         };
       });
     }
+    this.interval = setInterval(this.changeHand, 2000);
   };
 
   render() {
