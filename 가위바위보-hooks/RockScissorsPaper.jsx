@@ -22,11 +22,16 @@ const RockScissorsPaper = () => {
   useEffect(() => {
     // componentDidMount, componentDidUpdate 역할 (1:1 대응은 아님)
     interval.current = setInterval(changeHand, 100);
+    console.log("다시실행");
     return () => {
       // componentWillUnmount 역할
+      console.log("종료");
+
       clearInterval(interval.current);
     };
-  }, [imgCoord]); // 이 배열에는 바뀔 값을 넣어주면 된다.
+  }, [imgCoord]); // 이 배열에는 바뀔 값을 넣어주면 된다., 이값을 비워두면 DidMount, 쓰면 DidUpdate라고 보면된다.
+  //매번 clearInterval을 하기 때문에 그냥 setTimeout을 하는 것과 동일하다.
+  //함수 컴포넌트는 render 실행될 떄마다 모든게 다시 실행된다.
 
   // componentDidMount() {
   //   // 첫 렌더링된 후,, 여기에 비동기 요청을 많이 함.
