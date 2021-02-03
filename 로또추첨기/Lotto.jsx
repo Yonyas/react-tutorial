@@ -1,5 +1,8 @@
 const React = require("react");
 const { Component } = React;
+const Ball = require("./Ball");
+// import React, { Component} from 'react';
+// import Ball from './Ball'
 
 getNumbers = () => {
   console.log("getNumbers");
@@ -28,6 +31,35 @@ class Lotto extends Component {
     bonus: null,
     redo: false,
   };
+
+  timeouts = [];
+
+  componentDidMount = () => {
+    const { winNum } = this.state;
+    //let을 쓰면 클로저문제가 안생긴다.
+    for (let i = 0; i < winNum.length - 1; i++) {
+      this.timeouts[i] = setTimeout(() => {
+        this.setState((prevState) => {
+          return {
+            winBalls: [...prevState.winBalls, winNum[i]],
+          };
+        });
+      }, (i + 1) * 1000);
+    }
+    this.timeouts[6] = setTimeout(() => {
+      this.setState({
+        bonus: winNum[winNum.length - 1],
+        redo: true,
+      });
+    }, 7000);
+  };
+
+  componentWillUnmount = () => {
+    this.timeouts.forEach((v) => {
+      clearTimeout(v);
+    });
+  };
+
   render() {
     const { winBalls, bonus, redo } = this.state;
     return (
@@ -40,10 +72,11 @@ class Lotto extends Component {
         </div>
         <div>보너스!</div>
         {bonus && <Ball number={bonus} />}
-        <button onClick={redo ? this.onClickRedo : () => {}}>한번더</button>
+        {redo && <button onClick={this.onClickRedo}>한번더</button>}
       </>
     );
   }
 }
 
 module.exports = Lotto;
+// export default Lotto;

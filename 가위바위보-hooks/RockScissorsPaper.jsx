@@ -30,6 +30,7 @@ const RockScissorsPaper = () => {
       clearInterval(interval.current);
     };
   }, [imgCoord]); // 이 배열에는 바뀔 값을 넣어주면 된다., 이값을 비워두면 DidMount, 쓰면 DidUpdate라고 보면된다.
+  // 배열안의 값이 바뀌면 useEffect가 다시 실행된다.
   //매번 clearInterval을 하기 때문에 그냥 setTimeout을 하는 것과 동일하다.
   //함수 컴포넌트는 render 실행될 떄마다 모든게 다시 실행된다.
 
