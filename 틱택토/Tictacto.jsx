@@ -34,6 +34,8 @@ const initialState = {
 
 export const SET_WINNER = "SET_WINNER";
 export const CLICK_CELL = "CLICK_CELL";
+export const SET_TURN = "SET_TURN";
+export const CHANGE_TURN = "CHANGE_TURN";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -44,13 +46,19 @@ const reducer = (state, action) => {
         winner: action.winner,
       };
     case CLICK_CELL: {
-      const tableData = [...state.tableData];
-      tableData[action.row] = [...tableData[action.row]];
+      const tableData = [...state.tableData]; // tableData를 얕은 복사
+      tableData[action.row] = [...tableData[action.row]]; // immer라는 라이브러리로 가독성 해결
       tableData[action.row][action.cell] = state.turn;
 
       return {
         ...state,
         tableData,
+      };
+    }
+    case CHANGE_TURN: {
+      return {
+        ...state,
+        turn: state.turn === "O" ? "X" : "O",
       };
     }
   }
