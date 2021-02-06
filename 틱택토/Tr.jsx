@@ -8,7 +8,7 @@ const Tr = ({ rowData, rowIndex, dispatch }) => {
     <tr>
       {Array(rowData.length)
         .fill()
-        .map((t, i) => (
+        .map((td, i) => (
           <Td
             rowIndex={rowIndex}
             cellIndex={i}

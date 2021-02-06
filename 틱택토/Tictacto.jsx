@@ -3,7 +3,7 @@
 // const { useState, useReducer, useCallback } = React;
 
 import React from "react";
-import { useReducer, useCallback } from "react";
+import { useReducer, useCallback, useEffect } from "react";
 import Table from "./Table";
 
 {
@@ -22,6 +22,7 @@ const initialState = {
     ["", "", ""],
     ["", "", ""],
   ],
+  recentCell: [-1, -1],
 };
 
 // const [winner, setWinner] = useState("");
@@ -53,6 +54,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         tableData,
+        recentCell: [action.row, action.cell],
       };
     }
     case CHANGE_TURN: {
@@ -66,11 +68,51 @@ const reducer = (state, action) => {
 
 const Tictacto = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { tableData, turn, winner, recentCell } = state;
 
   const onClickTable = useCallback(() => {
     // props로 넘기는 함수는 useCallback
     dispatch({ type: SET_WINNER, winner: "O" }); //  이 객체가 액션객체고 dispatch하면 액션을 실행하는것
   }, []);
+
+  useEffect(() => {
+    const [row, cell] = recentCell;
+    if (row < 0) {
+      return;
+    }
+    let win = false;
+    if (
+      tableData[row][0] === turn &&
+      tableData[row][1] === turn &&
+      tableData[row][2] === turn
+    ) {
+      win = true;
+    }
+    if (
+      tableData[0][cell] === turn &&
+      tableData[0][cell] === turn &&
+      tableData[0][cell] === turn
+    ) {
+      win = true;
+    }
+    if (
+      tableData[0][0] === turn &&
+      tableData[1][1] === turn &&
+      tableData[2][2] === turn
+    ) {
+      win = true;
+    }
+    if (
+      tableData[2][0] === turn &&
+      tableData[1][1] === turn &&
+      tableData[0][2] === turn
+    ) {
+      win = true;
+    }
+    if (win) {
+      dispatch({ type: SET_WINNER, winner: turn });
+    }
+  }, [recentCell]);
 
   return (
     <>
