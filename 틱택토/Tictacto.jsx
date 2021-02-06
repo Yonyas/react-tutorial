@@ -37,6 +37,7 @@ export const SET_WINNER = "SET_WINNER";
 export const CLICK_CELL = "CLICK_CELL";
 export const SET_TURN = "SET_TURN";
 export const CHANGE_TURN = "CHANGE_TURN";
+export const RESET_GAME = "RESET_GAME";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -63,6 +64,20 @@ const reducer = (state, action) => {
         turn: state.turn === "O" ? "X" : "O",
       };
     }
+    case RESET_GAME: {
+      return {
+        ...state,
+        turn: "O",
+        tableData: [
+          ["", "", ""],
+          ["", "", ""],
+          ["", "", ""],
+        ],
+        recentCell: [-1, -1],
+      };
+    }
+    default:
+      return state;
   }
 };
 
@@ -90,8 +105,8 @@ const Tictacto = () => {
     }
     if (
       tableData[0][cell] === turn &&
-      tableData[0][cell] === turn &&
-      tableData[0][cell] === turn
+      tableData[1][cell] === turn &&
+      tableData[2][cell] === turn
     ) {
       win = true;
     }
@@ -111,8 +126,23 @@ const Tictacto = () => {
     }
     if (win) {
       dispatch({ type: SET_WINNER, winner: turn });
+      dispatch({ type: RESET_GAME });
     } else {
-      dispatch({ type: CHANGE_TURN });
+      //무승부 검사
+      let all = true; // 칸이 다 차있다. 무승부
+      tableData.forEach((row) => {
+        row.forEach((cell) => {
+          if (!cell) {
+            all = false;
+          }
+        });
+      });
+      if (all) {
+        dispatch({ type: RESET_GAME });
+        dispatch({ type: SET_WINNER, winner: "" });
+      } else {
+        dispatch({ type: CHANGE_TURN });
+      }
     }
   }, [recentCell]);
 
