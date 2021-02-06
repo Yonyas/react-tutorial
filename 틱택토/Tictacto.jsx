@@ -111,6 +111,8 @@ const Tictacto = () => {
     }
     if (win) {
       dispatch({ type: SET_WINNER, winner: turn });
+    } else {
+      dispatch({ type: CHANGE_TURN });
     }
   }, [recentCell]);
 

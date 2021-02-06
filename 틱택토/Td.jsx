@@ -8,7 +8,6 @@ const Td = memo(({ rowIndex, cellIndex, dispatch, cellData }) => {
       return;
     } else {
       dispatch({ type: CLICK_CELL, row: rowIndex, cell: cellIndex });
-      dispatch({ type: CHANGE_TURN });
     }
   }, [cellData]);
 
